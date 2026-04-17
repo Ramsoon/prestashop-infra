@@ -1,4 +1,4 @@
-# Prestashop DevOps Terraform Project
+# Prestashop DevOps Project
 
 This project sets up a Prestashop e-commerce site on AWS using Terraform, including an EC2 instance with Apache, PHP, and Prestashop installed via user data script.
 
@@ -22,12 +22,18 @@ This project sets up a Prestashop e-commerce site on AWS using Terraform, includ
    cd terraform
    ```
 
-3. **Initialize Terraform:**
+3. **Create the backend resources** required for remote state:
+   ```
+   aws s3 mb s3://prestashop-terraform-state-bucket --region us-east-1
+   aws dynamodb create-table --table-name terraform-locks --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1 --region us-east-1
+   ```
+
+4. **Initialize Terraform:**
    ```
    terraform init
    ```
 
-4. **Create a terraform.tfvars file** with your database credentials:
+5. **Create a terraform.tfvars file** with your database credentials:
    ```
    db_username = "your_db_username"
    db_password = "your_db_password"
